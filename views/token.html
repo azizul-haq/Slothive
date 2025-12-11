@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Token - Room Booking System</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .token-card {
+            max-width: 400px !important;
+            padding: 25px !important;
+            margin: 20px auto !important;
+            font-size: 0.9rem;
+            border-radius: 12px !important;
+            background: #ffffff !important;
+            border: 2px solid #333 !important;
+            color: #333 !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15) !important;
+        }
+
+        .token-header h2 {
+            font-size: 1.2rem !important;
+            margin-bottom: 10px !important;
+            padding-bottom: 8px !important;
+            color: #333 !important;
+            border-bottom: 2px solid #333 !important;
+        }
+
+        .university-info {
+            font-size: 0.75rem !important;
+            margin-bottom: 15px !important;
+            color: #666 !important;
+        }
+
+        .university-info p {
+            color: #666 !important;
+        }
+
+        .token-details {
+            margin: 15px 0 !important;
+        }
+
+        .token-row {
+            padding: 6px 0 !important;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee !important;
+        }
+
+        .token-row:last-child {
+            border-bottom: none !important;
+        }
+
+        .token-row .label {
+            font-weight: 600;
+            color: #555 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .token-row .value {
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa !important;
+            color: #333 !important;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            border: 1px solid #ccc !important;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .token-footer {
+            margin-top: 15px !important;
+            font-size: 0.75rem;
+            color: #666 !important;
+        }
+
+        .instructions {
+            background: #f9f9f9 !important;
+            border: 1px solid #e0e0e0 !important;
+            border-left: 3px solid #667eea !important;
+            padding: 8px !important;
+            font-size: 0.7rem;
+            margin-bottom: 10px !important;
+            color: #333 !important;
+        }
+
+        .signature-section {
+            gap: 10px !important;
+            margin-top: 10px !important;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .signature-line {
+            font-size: 0.7rem !important;
+            color: #666 !important;
+        }
+
+        .signature-box {
+            height: 30px !important;
+            border: 1px solid #999 !important;
+            background: #ffffff !important;
+            color: #333 !important;
+            padding: 5px !important;
+        }
+
+        .token-actions {
+            margin-top: 15px !important;
+        }
+
+        .token-actions .btn {
+            padding: 8px 16px !important;
+            font-size: 0.8rem !important;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { margin: 0; padding: 20px; background: white !important; color: black !important; }
+            .token-card {
+                border: 2px solid #000 !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                max-width: none !important;
+                background: white !important;
+                color: black !important;
+            }
+            .token-row .label {
+                color: black !important;
+            }
+            .token-row .value {
+                background: #f5f5f5 !important;
+                color: black !important;
+                border: 1px solid #ccc !important;
+            }
+            .signature-box {
+                background: white !important;
+                color: black !important;
+                border: 1px solid #000 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar no-print">
+            <div class="navbar-logo">
+                <a href="/dashboard_student">
+                    <img src="/images/logo.png" alt="Unislot Logo">
+                </a>
+            </div>
+            <div class="navbar-nav">
+                <a href="/dashboard_student" class="nav-link">Dashboard</a>
+                <a href="/slots" class="nav-link">Available Slots</a>
+                <a href="/bookings" class="nav-link">My Bookings</a>
+            </div>
+            <div class="navbar-auth">
+                <button onclick="window.history.back()" class="btn-nav btn-login">Back</button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="token-container">
+                <div class="token-card" id="tokenCard">
+                    <div class="token-header">
+                        <h2>Unislot Presentation Token</h2>
+                    </div>
+
+                    <div class="token-details">
+                        <div class="token-row">
+                            <span class="label">Token Code:</span>
+                            <span class="value" id="tokenCode">Loading...</span>
+                        </div>
+                        <div class="token-row">
+                            <span class="label">Student Name:</span>
+                            <span class="value" id="studentName">Loading...</span>
+                        </div>
+                        <div class="token-row">
+                            <span class="label">Student ID:</span>
+                            <span class="value" id="studentId">Loading...</span>
+                        </div>
+                        <div class="token-row">
+                            <span class="label">Room Number:</span>
+                            <span class="value" id="roomNo">Loading...</span>
+                        </div>
+                        <div class="token-row">
+                            <span class="label">Date:</span>
+                            <span class="value" id="bookingDate">Loading...</span>
+                        </div>
+                        <div class="token-row">
+                            <span class="label">Time:</span>
+                            <span class="value" id="bookingTime">Loading...</span>
+                        </div>
+                        <div class="token-row">
+                            <span class="label">Booking Time:</span>
+                            <span class="value" id="createdTime">Loading...</span>
+                        </div>
+                    </div>
+
+                    <div class="token-footer">
+                        <p class="instructions">
+                            <strong>Instructions:</strong><br>
+                            1. Present this token to the floor staff<br>
+                            2. Keep this token safe until your presentation<br>
+                            3. This token is valid only for the specified time and room
+                        </p>
+                        <div class="signature-section">
+                            <div class="signature-line">
+                                <span>Staff Signature:</span>
+                                <div class="signature-box"></div>
+                            </div>
+                            <div class="signature-line">
+                                <span>Date & Time:</span>
+                                <div class="signature-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="token-actions no-print">
+                    <button onclick="window.print()" class="btn btn-primary">Print Token</button>
+                    <a href="/dashboard_student" class="btn btn-secondary">Back to Dashboard</a>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer no-print">
+            <p>&copy; 2025 Unislot-Presentation Room Booking System</p>
+        </footer>
+    </div>
+
+    <script>
+        // Get token code from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenCode = urlParams.get('code');
+
+        if (!tokenCode) {
+            document.getElementById('tokenCard').innerHTML = 
+                '<div class="error-message"><h2>Error</h2><p>No token code provided.</p></div>';
+        } else {
+            // Load token details
+            loadTokenDetails(tokenCode);
+        }
+
+        async function loadTokenDetails(tokenCode) {
+            try {
+                // Fetch token details from API
+                const response = await fetch(`/api/student/bookings`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch booking details');
+                }
+
+                const result = await response.json();
+                const booking = result.bookings.find(b => b.token_code === tokenCode);
+
+                if (!booking) {
+                    throw new Error('Token not found');
+                }
+
+                // Format date to DD-MM-YYYY
+                const dateParts = booking.date.split('-');
+                const formattedDate = `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0]}`;
+
+                // Format time to HH-MM AM/PM
+                const formatTime = (timeStr) => {
+                    const [hours, minutes] = timeStr.split(':');
+                    const hour24 = parseInt(hours);
+                    const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+                    const ampm = hour24 >= 12 ? 'PM' : 'AM';
+                    return `${String(hour12).padStart(2, '0')}-${String(minutes).padStart(2, '0')} ${ampm}`;
+                };
+
+                const formattedStartTime = formatTime(booking.time_start);
+                const formattedEndTime = formatTime(booking.time_end);
+
+                // Format booking time to DD-MM-YYYY HH-MM AM/PM
+                const bookingDate = new Date(booking.booking_time);
+                const bookingDay = String(bookingDate.getDate()).padStart(2, '0');
+                const bookingMonth = String(bookingDate.getMonth() + 1).padStart(2, '0');
+                const bookingYear = bookingDate.getFullYear();
+                const bookingHour24 = bookingDate.getHours();
+                const bookingHour12 = bookingHour24 === 0 ? 12 : bookingHour24 > 12 ? bookingHour24 - 12 : bookingHour24;
+                const bookingMinutes = String(bookingDate.getMinutes()).padStart(2, '0');
+                const bookingAmpm = bookingHour24 >= 12 ? 'PM' : 'AM';
+
+                const formattedBookingTime = `${bookingDay}-${bookingMonth}-${bookingYear} ${String(bookingHour12).padStart(2, '0')}-${bookingMinutes} ${bookingAmpm}`;
+
+                // Populate token details
+                document.getElementById('tokenCode').textContent = booking.token_code;
+                document.getElementById('studentName').textContent = booking.student_name || 'Student';
+                document.getElementById('studentId').textContent = booking.student_id;
+                document.getElementById('roomNo').textContent = booking.room_no;
+                document.getElementById('bookingDate').textContent = formattedDate;
+                document.getElementById('bookingTime').textContent = `${formattedStartTime} - ${formattedEndTime}`;
+                document.getElementById('createdTime').textContent = formattedBookingTime;
+
+            } catch (error) {
+                console.error('Error loading token details:', error);
+                document.getElementById('tokenCard').innerHTML =
+                    '<div class="error-message"><h2>Error</h2><p>Failed to load token details.</p></div>';
+            }
+        }
+
+        // Auto-print when page loads (optional)
+        // window.addEventListener('load', () => {
+        //     setTimeout(() => window.print(), 1000);
+        // });
+    </script>
+</body>
+</html> 

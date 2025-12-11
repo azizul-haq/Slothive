@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - Unislot</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="navbar-logo">
+                <a href="/dashboard_student">
+                    <img src="/images/logo.png" alt="Unislot Logo">
+                </a>
+            </div>
+            <div class="navbar-nav">
+                <a href="/dashboard_student" class="nav-link">Dashboard</a>
+                <a href="/slots" class="nav-link">Available Slots</a>
+                <a href="/bookings" class="nav-link active">My Bookings</a>
+            </div>
+            <div class="navbar-auth">
+                <button id="logoutBtn" class="btn-nav btn-logout">Logout</button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="dashboard-section">
+                <h2>My Bookings</h2>
+                <div id="bookingsContainer" class="bookings-grid">
+                    <p>Loading your bookings...</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 Unislot-Presentation Room Booking System</p>
+        </footer>
+    </div>
+
+    <script>
+        // Check authentication on page load
+        window.addEventListener('load', async function() {
+            try {
+                const response = await fetch('/api/auth/check');
+                if (!response.ok) {
+                    window.location.href = '/login';
+                    return;
+                }
+
+                const result = await response.json();
+                if (result.role !== 'student') {
+                    window.location.href = '/login';
+                    return;
+                }
+
+                // Load user bookings
+                loadMyBookings();
+            } catch (error) {
+                window.location.href = '/login';
+            }
+        });
+
+        // Load user's bookings
+        async function loadMyBookings() {
+            try {
+                const response = await fetch('/api/student/bookings');
+                const result = await response.json();
+
+                const container = document.getElementById('bookingsContainer');
+
+                if (result.bookings.length === 0) {
+                    container.innerHTML = '<div class="no-bookings-card"><p class="no-data">You have no bookings yet.</p></div>';
+                    return;
+                }
+
+                const bookingsHTML = result.bookings.map(booking => {
+                    // Format date to DD-MM-YYYY
+                    const dateParts = booking.date.split('-');
+                    const formattedDate = `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0]}`;
+
+                    // Format time to HH-MM AM/PM
+                    const formatTime = (timeStr) => {
+                        const [hours, minutes] = timeStr.split(':');
+                        const hour24 = parseInt(hours);
+                        const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+                        const ampm = hour24 >= 12 ? 'PM' : 'AM';
+                        return `${String(hour12).padStart(2, '0')}-${String(minutes).padStart(2, '0')} ${ampm}`;
+                    };
+
+                    const formattedStartTime = formatTime(booking.time_start);
+                    const formattedEndTime = formatTime(booking.time_end);
+
+                    // Format booking time to DD-MM-YYYY HH-MM AM/PM
+                    const bookingDate = new Date(booking.booking_time);
+                    const bookingDay = String(bookingDate.getDate()).padStart(2, '0');
+                    const bookingMonth = String(bookingDate.getMonth() + 1).padStart(2, '0');
+                    const bookingYear = bookingDate.getFullYear();
+                    const bookingHour24 = bookingDate.getHours();
+                    const bookingHour12 = bookingHour24 === 0 ? 12 : bookingHour24 > 12 ? bookingHour24 - 12 : bookingHour24;
+                    const bookingMinutes = String(bookingDate.getMinutes()).padStart(2, '0');
+                    const bookingAmpm = bookingHour24 >= 12 ? 'PM' : 'AM';
+
+                    const formattedBookingTime = `${bookingDay}-${bookingMonth}-${bookingYear} ${String(bookingHour12).padStart(2, '0')}-${bookingMinutes} ${bookingAmpm}`;
+
+                    return `
+                    <div class="booking-card card">
+                        <div class="booking-info">
+                            <h3>Room ${booking.room_no}</h3>
+                            <p><strong>Date:</strong> ${formattedDate}</p>
+                            <p><strong>Time:</strong> ${formattedStartTime} - ${formattedEndTime}</p>
+                            <p><strong>Token:</strong> <code>${booking.token_code}</code></p>
+                            <p><strong>Booked on:</strong> ${formattedBookingTime}</p>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">
+                            <button class="btn btn-secondary card-secondary" onclick="viewToken('${booking.token_code}')" style="width: 100%;">
+                                View Token
+                            </button>
+                            <button class="btn btn-danger" onclick="cancelBooking(${booking.booking_id}, '${booking.room_no}')" style="width: 100%;">
+                                Cancel Booking
+                            </button>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+
+                container.innerHTML = bookingsHTML;
+            } catch (error) {
+                document.getElementById('bookingsContainer').innerHTML =
+                    '<div class="error-card"><p class="error">Error loading bookings. Please refresh the page.</p></div>';
+            }
+        }
+
+        // View token
+        function viewToken(tokenCode) {
+            window.location.href = `/token?code=${tokenCode}`;
+        }
+
+        // Cancel booking
+        async function cancelBooking(bookingId, roomNo) {
+            if (!confirm(`Are you sure you want to cancel your booking for Room ${roomNo}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/student/bookings/${bookingId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('Booking cancelled successfully!');
+                    loadMyBookings(); // Reload the bookings list
+                } else {
+                    const error = await response.json();
+                    alert('Error cancelling booking: ' + error.error);
+                }
+            } catch (error) {
+                alert('Error cancelling booking. Please try again.');
+            }
+        }
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async function() {
+            try {
+                await fetch('/api/auth/logout', { method: 'POST' });
+                window.location.href = '/login';
+            } catch (error) {
+                window.location.href = '/login';
+            }
+        });
+    </script>
+</body>
+</html>

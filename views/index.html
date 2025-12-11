@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unislot - University Presentation Room Booking</title>
+    <link rel="icon" type="image/x-icon" href="public/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="navbar-logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="Unislot Logo">
+                </a>
+            </div>
+            <div class="navbar-nav">
+                <a href="/home" class="nav-link active">Home</a>
+                <a href="/register" class="nav-link">Register</a>
+            </div>
+            <div class="navbar-auth">
+                <a href="/login" class="btn-nav btn-login">Login</a>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="welcome-section">
+                <h2>Welcome</h2>
+                <p>Book your presentation slots easily and efficiently</p>
+                <a href="/login" class="btn btn-primary" style="margin-top: 20px; padding: 15px 30px; font-size: 1.1rem;">Login to Continue</a>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 Unislot-Presentation Room Booking System</p>
+        </footer>
+    </div>
+
+    <script>
+        // Auto-redirect to login after 3 seconds
+        setTimeout(() => {
+            window.location.href = '/login';
+        }, 3000);
+    </script>
+</body>
+</html>
