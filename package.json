@@ -1,7 +1,7 @@
 {
-  "name": "presentation-room-booking",
+  "name": "slothive",
   "version": "1.0.0",
-  "description": "A presentation room booking system for university students and teachers",
+  "description": "SlotHive - Where Every Slot Finds a Place. A presentation room booking system for university students and teachers",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",

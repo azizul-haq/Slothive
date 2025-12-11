@@ -3,45 +3,553 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unislot - University Presentation Room Booking</title>
-    <link rel="icon" type="image/x-icon" href="public/favicon.ico">
+    <title>SlotHive - Presentation Room Booking System</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Enhanced styling for the new homepage */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(15, 9, 12, 0.9), rgba(184, 110, 159, 0.3)),
+                        url('/images/Hero1.jpg') center/cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff, #B86E9F);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text .tagline {
+            font-size: 1.5rem;
+            color: #B86E9F;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .hero-form {
+            background: rgba(15, 9, 12, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(184, 110, 159, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-form h3 {
+            color: #B86E9F;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .features-section {
+            padding: 100px 0;
+            background: #1a1a1a;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #B86E9F;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: #cccccc;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: rgba(15, 9, 12, 0.6);
+            border: 1px solid rgba(184, 110, 159, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #B86E9F;
+            box-shadow: 0 10px 30px rgba(184, 110, 159, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #B86E9F;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        .process-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a1a2a 100%);
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .process-step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #B86E9F, #9B4A7C);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            margin: 0 auto 20px;
+        }
+
+        .process-step h3 {
+            color: #B86E9F;
+            margin-bottom: 15px;
+        }
+
+        .process-step p {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        .testimonials-section {
+            padding: 100px 0;
+            background: #1a1a1a;
+        }
+
+        .testimonial-card {
+            background: rgba(15, 9, 12, 0.6);
+            border: 1px solid rgba(184, 110, 159, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px;
+            text-align: center;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: #cccccc;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-author {
+            color: #B86E9F;
+            font-weight: 600;
+        }
+
+        .stats-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #B86E9F, #9B4A7C);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+
+        .cta-section {
+            padding: 100px 0;
+            background: #1a1a1a;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            color: #B86E9F;
+            margin-bottom: 20px;
+        }
+
+        .cta-content p {
+            color: #cccccc;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+
+        .footer {
+            background: #0a0a0a;
+            color: #cccccc;
+            padding: 60px 0 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            color: #B86E9F;
+            margin-bottom: 20px;
+        }
+
+        .footer-section p {
+            line-height: 1.6;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #cccccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #B86E9F;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 40px;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <nav class="navbar">
-            <div class="navbar-logo">
-                <a href="/">
-                    <img src="/images/logo.png" alt="Unislot Logo">
-                </a>
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Book Your Perfect Presentation Space</h1>
+                <p class="tagline">Where Every Slot Finds a Place</p>
+                <p>Streamline your presentation bookings with SlotHive's intelligent room management system. Whether you're a student preparing for your thesis defense or a teacher managing classroom resources, we make scheduling effortless and conflict-free.</p>
+                <div class="hero-buttons">
+                    <a href="/login" class="btn btn-primary" style="padding: 15px 30px; font-size: 1.1rem; font-weight: 600;">Login to Get Started</a>
+                    <a href="/register" class="btn btn-secondary" style="padding: 15px 30px; font-size: 1.1rem; font-weight: 600;">Create Account</a>
+                </div>
             </div>
-            <div class="navbar-nav">
-                <a href="/home" class="nav-link active">Home</a>
-                <a href="/register" class="nav-link">Register</a>
+            <div class="hero-form">
+                <h3>Quick Access</h3>
+                <p style="color: #cccccc; text-align: center; margin-bottom: 25px;">Get started with SlotHive in just a few clicks</p>
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <a href="/login" class="btn btn-primary" style="width: 100%; text-align: center; padding: 12px;">Login</a>
+                    <a href="/register" class="btn btn-secondary" style="width: 100%; text-align: center; padding: 12px;">Register</a>
+                </div>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(184, 110, 159, 0.3);">
+                    <p style="font-size: 0.9rem; color: #999; text-align: center;">Free for students and teachers</p>
+                </div>
             </div>
-            <div class="navbar-auth">
-                <a href="/login" class="btn-nav btn-login">Login</a>
-            </div>
-        </nav>
-
-        <main class="main-content">
-            <div class="welcome-section">
-                <h2>Welcome</h2>
-                <p>Book your presentation slots easily and efficiently</p>
-                <a href="/login" class="btn btn-primary" style="margin-top: 20px; padding: 15px 30px; font-size: 1.1rem;">Login to Continue</a>
-            </div>
-        </main>
-
-        <footer class="footer">
-            <p>&copy; 2025 Unislot-Presentation Room Booking System</p>
-        </footer>
+        </div>
     </div>
 
+    <section class="features-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Choose SlotHive?</h2>
+                <p>Experience the most efficient way to manage presentation room bookings with our comprehensive features designed for academic excellence.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Smart Scheduling</h3>
+                    <p>Advanced conflict detection ensures you never book an unavailable room. Our intelligent system prevents double bookings and optimizes room utilization.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant Booking</h3>
+                    <p>Book your preferred time slots in seconds with our streamlined interface. Real-time availability updates keep you informed of all opportunities.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Access SlotHive anywhere, anytime. Our responsive design ensures perfect functionality on smartphones, tablets, and desktop computers.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure & Reliable</h3>
+                    <p>Your data is protected with enterprise-grade security. Session management and password encryption keep your information safe.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Real-time Analytics</h3>
+                    <p>Track booking patterns, room utilization, and peak times. Teachers get insights to optimize room scheduling and availability.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎫</div>
+                    <h3>Digital Tokens</h3>
+                    <p>Generate secure booking tokens for verification. Perfect for campus security checks and presentation day confirmations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="process-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>How It Works</h2>
+                <p>Getting started with SlotHive is simple. Follow these three easy steps to book your presentation space.</p>
+            </div>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3>Sign Up</h3>
+                    <p>Create your free account using your university email. Students and teachers get instant access to all features.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3>Browse & Book</h3>
+                    <p>View available rooms and time slots. Select your preferred space and confirm your booking with just one click.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3>Present</h3>
+                    <p>Receive your digital booking token and arrive at your scheduled time. Present with confidence in your reserved space.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>500+</h3>
+                    <p>Rooms Managed</p>
+                </div>
+                <div class="stat-item">
+                    <h3>10,000+</h3>
+                    <p>Successful Bookings</p>
+                </div>
+                <div class="stat-item">
+                    <h3>98%</h3>
+                    <p>User Satisfaction</p>
+                </div>
+                <div class="stat-item">
+                    <h3>24/7</h3>
+                    <p>System Availability</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Users Say</h2>
+                <p>Join thousands of students and teachers who trust SlotHive for their presentation needs.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px;">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"SlotHive made booking presentation rooms so much easier. I can now focus on preparing my content instead of worrying about scheduling conflicts."</p>
+                    <p class="testimonial-author">- Sarah Ahmed, Computer Science Student</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"As a teacher, managing multiple presentation rooms was always challenging. SlotHive's dashboard gives me complete control and visibility."</p>
+                    <p class="testimonial-author">- Dr. Muhammad Khan, Engineering Department</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"The digital tokens are brilliant! No more paper confirmations or verification issues. Everything is seamless and professional."</p>
+                    <p class="testimonial-author">- Lisa Chen, MBA Student</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Transform Your Presentation Experience?</h2>
+                <p>Join SlotHive today and discover the future of presentation room booking. Simple, efficient, and designed for academic success.</p>
+                <div class="hero-buttons">
+                    <a href="/register" class="btn btn-primary" style="padding: 15px 40px; font-size: 1.2rem; font-weight: 600;">Get Started Now</a>
+                    <a href="/login" class="btn btn-secondary" style="padding: 15px 40px; font-size: 1.2rem; font-weight: 600;">Login</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About SlotHive</h3>
+                    <p>SlotHive is the premier presentation room booking system designed specifically for educational institutions. We make scheduling simple, efficient, and conflict-free.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                        <li><a href="/dashboard_student">Student Dashboard</a></li>
+                        <li><a href="/dashboard_teacher">Teacher Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Features</h3>
+                    <ul>
+                        <li><a href="#">Smart Scheduling</a></li>
+                        <li><a href="#">Real-time Availability</a></li>
+                        <li><a href="#">Digital Tokens</a></li>
+                        <li><a href="#">Mobile Access</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <p>Need help? Our support team is available to assist you with any questions about SlotHive.</p>
+                    <p style="margin-top: 10px;"><strong>Email:</strong> support@slothive.edu</p>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(184, 110, 159, 0.3); padding-top: 20px; margin-top: 40px;">
+                <p>&copy; 2025 SlotHive - Presentation Room Booking System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
     <script>
-        // Auto-redirect to login after 3 seconds
-        setTimeout(() => {
-            window.location.href = '/login';
-        }, 3000);
+        // Add smooth scrolling and interactive features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate elements on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe feature cards
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+
+            // Observe process steps
+            document.querySelectorAll('.process-step').forEach(step => {
+                step.style.opacity = '0';
+                step.style.transform = 'translateY(20px)';
+                step.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(step);
+            });
+
+            // Auto-redirect to login after 10 seconds
+            setTimeout(() => {
+                if (confirm('Ready to get started? Redirecting to login page...')) {
+                    window.location.href = '/login';
+                }
+            }, 10000);
+        });
     </script>
 </body>
 </html>

@@ -10,7 +10,7 @@ const studentRoutes = require('./routes/student');
 const teacherRoutes = require('./routes/teacher');
 
 // Using Oracle DB for data persistence
-console.log('🚀 Starting presentation room booking system with Oracle DB');
+console.log('🚀 Starting SlotHive - Presentation Room Booking System with Oracle DB');
 
 // MIME types
 const mimeTypes = {
@@ -123,7 +123,7 @@ const server = http.createServer(handleRequest);
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
-    console.log('Presentation Room Booking System');
+    console.log('SlotHive - Presentation Room Booking System');
     console.log('Available routes:');
     console.log('- / (Home page)');
     console.log('- /login (Login page)');

@@ -1,4 +1,6 @@
-# Presentation Room Booking System
+# SlotHive - Presentation Room Booking System
+
+SlotHive - Where Every Slot Finds a Place
 
 A comprehensive presentation room booking system for university students and teachers, built with Node.js and Oracle Database 11g.
 
@@ -205,9 +207,8 @@ presentation-room-booking/
 
 ## 🎉 **Ready to Use!**
 
-Once you've configured your Oracle database connection in the `.env` file, simply run `npm start` and access `http://localhost:3000` to begin using the Presentation Room Booking System!
+Once you've configured your Oracle database connection in the `.env` file, simply run `npm start` and access `http://localhost:3000` to begin using SlotHive - Presentation Room Booking System!
 
 **Version**: 1.0.0
 **Last Updated**: December 2024
-# Slothive
-# Slothive
+# SlotHive - Where Every Slot Finds a Place
