@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | SlotHive</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/modern-system.css">
+    <style>
+        /* Enhanced Student Dashboard with Modern Light Theme */
+        :root {
+            --primary-blue: #3B82F6;
+            --light-blue: #60A5FA;
+            --blue-gradient: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+            --accent-blue: #2563EB;
+            --success-green: #10B981;
+            --warning-orange: #F59E0B;
+            --danger-red: #EF4444;
+            --light-bg: #F8FAFC;
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: var(--white);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--blue-gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--blue-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu-item {
+            text-decoration: none;
+            color: var(--gray-600);
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu-item:hover,
+        .nav-menu-item.active {
+            color: var(--primary-blue);
+        }
+
+        .nav-menu-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--blue-gradient);
+            border-radius: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .student-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--blue-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .student-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: var(--gray-800);
+            font-size: 0.875rem;
+        }
+
+        .student-role {
+            color: var(--gray-600);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .logout-btn {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--gray-200);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Section */
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 0;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+        }
+
+        .main-subtitle {
+            font-size: 1.125rem;
+            color: var(--gray-600);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Statistics Cards Section */
+        .stats-section {
+            margin-bottom: 3rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--blue-gradient);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .stat-icon.bookings {
+            background: var(--blue-gradient);
+        }
+
+        .stat-icon.upcoming {
+            background: linear-gradient(135deg, var(--success-green), #34D399);
+        }
+
+        .stat-icon.views {
+            background: linear-gradient(135deg, var(--warning-orange), #FBBF24);
+        }
+
+        .stat-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-status {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        /* Quick Actions Section */
+        .actions-section {
+            margin-bottom: 3rem;
+        }
+
+        .actions-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .actions-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+        }
+
+        .actions-description {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .actions-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: var(--blue-gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        /* Recent Activity Section */
+        .activity-section {
+            margin-bottom: 3rem;
+        }
+
+        .activity-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .activity-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--blue-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.875rem;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-title-text {
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-subtitle {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .activity-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: var(--gray-600);
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gray-200);
+            border-top: 2px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--gray-600);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem 0;
+            }
+
+            .nav-center {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-left,
+            .nav-right {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .actions-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .activity-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+            }
+
+            .activity-meta {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-section {
+                padding: 2rem 1rem;
+            }
+
+            .main-title {
+                font-size: 1.75rem;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <!-- Left side: Logo + SlotHive branding -->
+            <div class="nav-left">
+                <img src="/images/slothive_logo.png" alt="SlotHive Logo" style="width: 40px; height: 40px; margin-right: 0.5rem;">
+                <div class="brand-name">SlotHive</div>
+            </div>
+
+            <!-- Center: Navigation menu -->
+            <div class="nav-center">
+                <a href="/dashboard_student" class="nav-menu-item active">Dashboard</a>
+                <a href="/slots" class="nav-menu-item">Available Slots</a>
+                <a href="/bookings" class="nav-menu-item">My Bookings</a>
+                <a href="/booking_history" class="nav-menu-item active">History</a>
+                <a href="/token" class="nav-menu-item">Token</a>
+            </div>
+
+            <!-- Right side: Student profile + logout -->
+            <div class="nav-right">
+                <div class="student-profile">
+                    <div class="student-avatar" id="studentAvatar">S</div>
+                    <div class="student-info">
+                        <div class="student-name" id="studentName">Student</div>
+                        <div class="student-role">STUDENT</div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header Section -->
+        <section class="header-section">
+            <h1 class="main-title">Student Dashboard</h1>
+            <p class="main-subtitle">Welcome to your presentation booking dashboard. Manage your slots, track your bookings, and stay organized.</p>
+        </section>
+
+        <!-- Statistics Cards Section -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <!-- Card 1: Total Bookings -->
+                <div class="stat-card">
+                    <div class="stat-icon bookings">📅</div>
+                    <div class="stat-title">TOTAL BOOKINGS</div>
+                    <div class="stat-number" id="totalBookings">0</div>
+                    <div class="stat-status">All time bookings</div>
+                </div>
+
+                <!-- Card 2: Upcoming Slots -->
+                <div class="stat-card">
+                    <div class="stat-icon upcoming">⏰</div>
+                    <div class="stat-title">UPCOMING SLOTS</div>
+                    <div class="stat-number" id="upcomingSlots">0</div>
+                    <div class="stat-status">Ready to present</div>
+                </div>
+
+                <!-- Card 3: Tokens Viewed -->
+                <div class="stat-card">
+                    <div class="stat-icon views">👁️</div>
+                    <div class="stat-title">TOKENS VIEWED</div>
+                    <div class="stat-number" id="tokensViewed">0</div>
+                    <div class="stat-status">Total token views</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions Section -->
+        <section class="actions-section">
+            <div class="actions-card">
+                <h2 class="actions-title">Quick Actions</h2>
+                <p class="actions-description">
+                    Streamline your workflow with these essential actions. Book new presentation slots or view your existing bookings.
+                </p>
+                <div class="actions-buttons">
+                    <a href="/slots" class="btn btn-primary">
+                        <span>🔍</span>
+                        Browse Available Slots
+                    </a>
+                    <a href="/bookings" class="btn btn-secondary">
+                        <span>📋</span>
+                        View My Bookings
+                    </a>
+                    <button class="btn btn-secondary" onclick="refreshDashboard()">
+                        <span>🔄</span>
+                        Refresh Data
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Activity Section -->
+        <section class="activity-section">
+            <div class="activity-card">
+                <h2 class="activity-title">Recent Activity</h2>
+                <div id="activityContainer" class="activity-list">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        Loading recent activity...
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Dashboard functionality
+        let dashboardData = null;
+
+        // Initialize dashboard
+        window.addEventListener('load', async function() {
+            await checkAuthentication();
+            await loadDashboardData();
+            setupRealTimeUpdates();
+        });
+
+        // Check authentication
+        async function checkAuthentication() {
+            try {
+                const response = await fetch('/api/auth/check');
+                if (!response.ok) {
+                    window.location.href = '/login';
+                    return;
+                }
+                
+                const result = await response.json();
+                if (result.role !== 'student') {
+                    window.location.href = '/';
+                    return;
+                }
+
+                // Update student info
+                document.getElementById('studentName').textContent = 'Student';
+                document.getElementById('studentAvatar').textContent = 'S';
+            } catch (error) {
+                window.location.href = '/login';
+            }
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const response = await fetch('/api/student/dashboard');
+                if (!response.ok) throw new Error('Failed to load dashboard data');
+                
+                const data = await response.json();
+                dashboardData = data;
+                
+                updateDashboardUI(data);
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                showErrorState();
+            }
+        }
+
+        // Update dashboard UI
+        function updateDashboardUI(data) {
+            // Update statistics cards with animation
+            animateNumber('totalBookings', data.summary.total_bookings);
+            animateNumber('upcomingSlots', data.summary.upcoming_slots);
+            animateNumber('tokensViewed', data.summary.tokens_viewed);
+
+            // Update recent activity
+            updateRecentActivity(data.recent_activity);
+        }
+
+        // Animate number counting
+        function animateNumber(elementId, targetValue) {
+            const element = document.getElementById(elementId);
+            const startValue = 0;
+            const duration = 1000;
+            const startTime = performance.now();
+
+            function updateNumber(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function for smooth animation
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const currentValue = Math.round(startValue + (targetValue - startValue) * easeOutQuart);
+                
+                element.textContent = currentValue;
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateNumber);
+                }
+            }
+
+            requestAnimationFrame(updateNumber);
+        }
+
+        // Update recent activity
+        function updateRecentActivity(activities) {
+            const container = document.getElementById('activityContainer');
+            
+            if (activities.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <p>No recent activity. Start by booking your first presentation slot!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const activityHTML = activities.map(activity => {
+                const formattedDate = formatDate(activity.date);
+                const formattedTime = `${activity.time_start} - ${activity.time_end}`;
+                
+                return `
+                    <div class="activity-item">
+                        <div class="activity-icon">📅</div>
+                        <div class="activity-details">
+                            <div class="activity-title-text">Room ${activity.room_no}</div>
+                            <div class="activity-subtitle">${formattedDate} at ${formattedTime}</div>
+                        </div>
+                        <div class="activity-meta">
+                            <span>👁️ ${activity.view_count} views</span>
+                            <span class="status-badge status-${activity.status.toLowerCase()}">${activity.status}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = activityHTML;
+        }
+
+        // Show error state
+        function showErrorState() {
+            const container = document.getElementById('activityContainer');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">⚠️</div>
+                    <p>Failed to load dashboard data. Please try refreshing the page.</p>
+                </div>
+            `;
+        }
+
+        // Format date
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        // Setup real-time updates
+        function setupRealTimeUpdates() {
+            // Refresh data every 30 seconds
+            setInterval(loadDashboardData, 30000);
+        }
+
+        // Refresh dashboard
+        async function refreshDashboard() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<div class="loading-spinner"></div>Refreshing...';
+            button.disabled = true;
+
+            try {
+                await loadDashboardData();
+                button.innerHTML = '✅ Updated!';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 2000);
+            } catch (error) {
+                button.innerHTML = '❌ Error';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 2000);
+            }
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch('/api/auth/logout', { method: 'POST' })
+                    .then(() => window.location.href = '/')
+                    .catch(() => window.location.href = '/');
+            }
+        }
+
+        // Add status badge styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .status-badge {
+                padding: 0.25rem 0.5rem;
+                border-radius: 6px;
+                font-size: 0.75rem;
+                font-weight: 500;
+                text-transform: uppercase;
+            }
+            .status-active {
+                background: rgba(16, 185, 129, 0.1);
+                color: var(--success-green);
+            }
+            .status-cancelled {
+                background: rgba(239, 68, 68, 0.1);
+                color: var(--danger-red);
+            }
+            .status-completed {
+                background: rgba(107, 114, 128, 0.1);
+                color: var(--gray-600);
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

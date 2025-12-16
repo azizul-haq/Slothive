@@ -1,5 +1,5 @@
 // Use real Oracle DB
-const db = require('../db/oracle');
+const db = require('../../config/oracle');
 
 // Get user from session
 async function getUserFromSession(req) {
@@ -15,7 +15,7 @@ async function getUserFromSession(req) {
     try {
         // Check session in database
         const sessions = await db.execute(
-            'SELECT * FROM Sessions WHERE session_id = :session_id',
+            'SELECT * FROM Sessions WHERE session_id = :1',
             [sessionId]
         );
 
@@ -27,7 +27,7 @@ async function getUserFromSession(req) {
         const sessionTime = new Date(session.CREATED_AT);
         if (now - sessionTime > 24 * 60 * 60 * 1000) {
             // Clean up expired session
-            await db.execute('DELETE FROM Sessions WHERE session_id = :session_id', [sessionId]);
+            await db.execute('DELETE FROM Sessions WHERE session_id = :1', [sessionId]);
             return null;
         }
 
@@ -56,24 +56,127 @@ module.exports = function(req, res, parsedUrl) {
                 }
 
                 const { room_no, date, time_from, time_to } = req.body;
-                // Note: Only using fields that exist in the schema
+
+                // Comprehensive form validation
+                const validationErrors = [];
+
+                // Check required fields
                 if (!room_no || !date || !time_from || !time_to) {
+                    validationErrors.push('All fields (room number, date, time from, time to) are required');
+                }
+
+                // Validate room number format
+                if (room_no && (!/^[A-Za-z0-9\s\-_]+$/.test(room_no.trim()) || room_no.trim().length < 2 || room_no.trim().length > 20)) {
+                    validationErrors.push('Room number must be 2-20 characters and contain only letters, numbers, spaces, hyphens, or underscores');
+                }
+
+                // Validate date format and ensure it's not in the past
+                if (date) {
+                    const requestDate = new Date(date);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    if (isNaN(requestDate.getTime())) {
+                        validationErrors.push('Invalid date format');
+                    } else if (requestDate < today) {
+                        validationErrors.push('Cannot create rooms for past dates');
+                    }
+                }
+
+                // Validate time format and logic
+                if (time_from && time_to) {
+                    // Check time format (HH:MM)
+                    const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+                    if (!timeRegex.test(time_from) || !timeRegex.test(time_to)) {
+                        validationErrors.push('Time must be in HH:MM format (24-hour)');
+                    }
+
+                    // Check time logic
+                    const timeFrom = new Date(`${date}T${time_from}`);
+                    const timeTo = new Date(`${date}T${time_to}`);
+                    
+                    if (isNaN(timeFrom.getTime()) || isNaN(timeTo.getTime())) {
+                        validationErrors.push('Invalid time format');
+                    } else if (timeFrom >= timeTo) {
+                        validationErrors.push('End time must be after start time');
+                    } else {
+                        // Check minimum duration (at least 30 minutes)
+                        const durationMinutes = (timeTo - timeFrom) / (1000 * 60);
+                        if (durationMinutes < 30) {
+                            validationErrors.push('Room duration must be at least 30 minutes');
+                        }
+                        // Check maximum duration (not more than 8 hours)
+                        if (durationMinutes > 480) {
+                            validationErrors.push('Room duration cannot exceed 8 hours');
+                        }
+                    }
+                }
+
+                // Return validation errors if any
+                if (validationErrors.length > 0) {
                     res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Missing required fields' }));
+                    res.end(JSON.stringify({
+                        error: 'Validation failed',
+                        details: validationErrors
+                    }));
                     return;
                 }
 
-                // Validate time format
-                const timeFrom = new Date(`${date}T${time_from}`);
-                const timeTo = new Date(`${date}T${time_to}`);
-                if (isNaN(timeFrom.getTime()) || isNaN(timeTo.getTime())) {
+                // Check for duplicate room on the same date
+                const existingRooms = await db.execute(
+                    'SELECT room_id, room_no, date_available, time_from, time_to FROM Rooms WHERE room_no = :1 AND date_available = TO_DATE(:2, \'YYYY-MM-DD\')',
+                    [room_no.trim().toUpperCase(), date]
+                );
+
+                if (existingRooms.length > 0) {
                     res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Invalid time format' }));
+                    res.end(JSON.stringify({
+                        error: 'Room already exists',
+                        details: `Room ${room_no} already exists on ${date}. Please use a different room number or date.`
+                    }));
                     return;
                 }
-                if (timeFrom >= timeTo) {
+
+                // Check for time overlap with existing rooms on the same date
+                const newTimeFrom = new Date(`${date} ${time_from}:00`);
+                const newTimeTo = new Date(`${date} ${time_to}:00`);
+
+                const overlappingRooms = await db.execute(`
+                    SELECT room_id, room_no, time_from, time_to
+                    FROM Rooms
+                    WHERE date_available = TO_DATE(:1, 'YYYY-MM-DD')
+                    AND (
+                        (TO_TIMESTAMP(:2, 'YYYY-MM-DD HH24:MI:SS') >= time_from AND TO_TIMESTAMP(:2, 'YYYY-MM-DD HH24:MI:SS') < time_to) OR
+                        (TO_TIMESTAMP(:3, 'YYYY-MM-DD HH24:MI:SS') > time_from AND TO_TIMESTAMP(:3, 'YYYY-MM-DD HH24:MI:SS') <= time_to) OR
+                        (TO_TIMESTAMP(:2, 'YYYY-MM-DD HH24:MI:SS') <= time_from AND TO_TIMESTAMP(:3, 'YYYY-MM-DD HH24:MI:SS') >= time_to)
+                    )
+                `, [date, `${date} ${time_from}:00`, `${date} ${time_to}:00`]);
+
+                if (overlappingRooms.length > 0) {
+                    const overlappingRoom = overlappingRooms[0];
+                    // Format times for error message
+                    let existingTimeFrom = '';
+                    let existingTimeTo = '';
+                    
+                    if (overlappingRoom.TIME_FROM) {
+                        if (typeof overlappingRoom.TIME_FROM === 'string') {
+                            const timeMatch = overlappingRoom.TIME_FROM.match(/(\d{2}:\d{2}):\d{2}$/);
+                            existingTimeFrom = timeMatch ? timeMatch[1] : '';
+                        }
+                    }
+                    
+                    if (overlappingRoom.TIME_TO) {
+                        if (typeof overlappingRoom.TIME_TO === 'string') {
+                            const timeMatch = overlappingRoom.TIME_TO.match(/(\d{2}:\d{2}):\d{2}$/);
+                            existingTimeTo = timeMatch ? timeMatch[1] : '';
+                        }
+                    }
+
                     res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'End time must be after start time' }));
+                    res.end(JSON.stringify({
+                        error: 'Time overlap detected',
+                        details: `Time conflict with existing room ${overlappingRoom.ROOM_NO} (${existingTimeFrom} - ${existingTimeTo}). Please choose a different time slot.`
+                    }));
                     return;
                 }
 
@@ -81,7 +184,7 @@ module.exports = function(req, res, parsedUrl) {
                 await db.execute(
                     `INSERT INTO Rooms (room_no, date_available, time_from, time_to)
                      VALUES (:1, TO_DATE(:2, 'YYYY-MM-DD'), TO_TIMESTAMP(:3, 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP(:4, 'YYYY-MM-DD HH24:MI:SS'))`,
-                    [room_no, date, `${date} ${time_from}:00`, `${date} ${time_to}:00`]
+                    [room_no.trim().toUpperCase(), date, `${date} ${time_from}:00`, `${date} ${time_to}:00`]
                 );
 
                 // Get the latest room_id
@@ -343,9 +446,8 @@ module.exports = function(req, res, parsedUrl) {
                     return;
                 }
 
-                const url = require('url');
-                const query = url.parse(req.url, true).query;
-                const room_id = query.room_id;
+                // Use WHATWG URL API instead of deprecated url.parse()
+                const room_id = parsedUrl.searchParams.get('room_id');
 
                 if (!room_id) {
                     res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -362,7 +464,7 @@ module.exports = function(req, res, parsedUrl) {
                 }
 
                 // Check if room exists and get its details
-                const rooms = await db.execute('SELECT * FROM Rooms WHERE room_id = :room_id', [roomIdNum]);
+                const rooms = await db.execute('SELECT * FROM Rooms WHERE room_id = :1', [roomIdNum]);
                 if (rooms.length === 0) {
                     res.writeHead(404, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Room not found' }));
@@ -371,7 +473,7 @@ module.exports = function(req, res, parsedUrl) {
 
                 // Check if there are any booked slots for this room
                 const bookedSlots = await db.execute(
-                    'SELECT COUNT(*) as booked_count FROM Slots WHERE room_id = :room_id AND is_booked = :is_booked',
+                    'SELECT COUNT(*) as booked_count FROM Slots WHERE room_id = :1 AND is_booked = :2',
                     [roomIdNum, 'Y']
                 );
 
@@ -384,10 +486,10 @@ module.exports = function(req, res, parsedUrl) {
                 }
 
                 // Delete all slots for this room first
-                await db.execute('DELETE FROM Slots WHERE room_id = :room_id', [roomIdNum]);
+                await db.execute('DELETE FROM Slots WHERE room_id = :1', [roomIdNum]);
 
                 // Delete the room
-                await db.execute('DELETE FROM Rooms WHERE room_id = :room_id', [roomIdNum]);
+                await db.execute('DELETE FROM Rooms WHERE room_id = :1', [roomIdNum]);
 
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({
@@ -410,9 +512,8 @@ module.exports = function(req, res, parsedUrl) {
                     return;
                 }
 
-                const url = require('url');
-                const query = url.parse(req.url, true).query;
-                const slot_id = query.slot_id;
+                // Use WHATWG URL API instead of deprecated url.parse()
+                const slot_id = parsedUrl.searchParams.get('slot_id');
 
                 if (!slot_id) {
                     res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -430,7 +531,7 @@ module.exports = function(req, res, parsedUrl) {
 
                 // Check if slot exists and is not booked
                 const slots = await db.execute(
-                    'SELECT * FROM Slots WHERE slot_id = :slot_id',
+                    'SELECT * FROM Slots WHERE slot_id = :1',
                     [slotIdNum]
                 );
 
@@ -449,7 +550,7 @@ module.exports = function(req, res, parsedUrl) {
                 }
 
                 // Delete the slot
-                await db.execute('DELETE FROM Slots WHERE slot_id = :slot_id', [slotIdNum]);
+                await db.execute('DELETE FROM Slots WHERE slot_id = :1', [slotIdNum]);
 
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({
@@ -498,7 +599,7 @@ module.exports = function(req, res, parsedUrl) {
                     JOIN Students s ON b.student_id = s.student_id
                     JOIN Slots sl ON b.slot_id = sl.slot_id
                     JOIN Rooms r ON sl.room_id = r.room_id
-                    WHERE b.booking_id = :booking_id
+                    WHERE b.booking_id = :1
                 `, [bookingIdNum]);
 
                 if (bookingDetails.length === 0) {
@@ -514,12 +615,12 @@ module.exports = function(req, res, parsedUrl) {
 
                 // Delete the booking
                 console.log('Deleting booking:', bookingIdNum);
-                await db.execute('DELETE FROM Bookings WHERE booking_id = :booking_id', [bookingIdNum]);
+                await db.execute('DELETE FROM Bookings WHERE booking_id = :1', [bookingIdNum]);
 
                 // Update slot to be available again
                 console.log('Updating slot to available:', slotId);
                 await db.execute(
-                    'UPDATE Slots SET is_booked = :is_booked WHERE slot_id = :slot_id',
+                    'UPDATE Slots SET is_booked = :1 WHERE slot_id = :2',
                     ['N', slotId]
                 );
 
@@ -578,7 +679,7 @@ module.exports = function(req, res, parsedUrl) {
                 // Check if room has any booked slots
                 const bookedSlots = await db.execute(
                     `SELECT COUNT(*) as booked_count FROM Slots
-                     WHERE room_id = :room_id AND is_booked = 'Y'`,
+                     WHERE room_id = :1 AND is_booked = 'Y'`,
                     [parseInt(roomId)]
                 );
 
@@ -626,7 +727,7 @@ module.exports = function(req, res, parsedUrl) {
                 );
 
                 // Verify the update by querying the room back
-                const updatedRoom = await db.execute('SELECT * FROM Rooms WHERE room_id = :room_id', [parseInt(roomId)]);
+                const updatedRoom = await db.execute('SELECT * FROM Rooms WHERE room_id = :1', [parseInt(roomId)]);
                 console.log('Room after update:', updatedRoom[0]);
 
                 res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -686,12 +787,8 @@ module.exports = function(req, res, parsedUrl) {
 
                 // Update slot
                 await db.execute(
-                    'UPDATE Slots SET slot_start = :slot_start, slot_end = :slot_end WHERE slot_id = :slot_id',
-                    {
-                        slot_start: startTime.toISOString().replace('T', ' ').substring(0, 19),
-                        slot_end: endTime.toISOString().replace('T', ' ').substring(0, 19),
-                        slot_id: slotId
-                    }
+                    'UPDATE Slots SET slot_start = :1, slot_end = :2 WHERE slot_id = :3',
+                    [startTime.toISOString().replace('T', ' ').substring(0, 19), endTime.toISOString().replace('T', ' ').substring(0, 19), slotId]
                 );
 
                 res.writeHead(200, { 'Content-Type': 'application/json' });

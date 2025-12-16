@@ -1,13 +1,12 @@
 const http = require('http');
-const url = require('url');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
 // Import route handlers
-const authRoutes = require('./routes/auth');
-const studentRoutes = require('./routes/student');
-const teacherRoutes = require('./routes/teacher');
+const authRoutes = require('./src/routes/auth');
+const studentRoutes = require('./src/routes/student');
+const teacherRoutes = require('./src/routes/teacher');
 
 // Using Oracle DB for data persistence
 console.log('🚀 Starting SlotHive - Presentation Room Booking System with Oracle DB');
@@ -69,7 +68,8 @@ function serveStaticFile(res, filePath) {
 
 // Main request handler
 async function handleRequest(req, res) {
-    const parsedUrl = url.parse(req.url, true);
+    // Use WHATWG URL API instead of deprecated url.parse()
+    const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost:3000'}`);
     const pathname = parsedUrl.pathname;
     const method = req.method;
 
@@ -101,17 +101,17 @@ async function handleRequest(req, res) {
     // Serve static files
     let filePath;
     if (pathname === '/') {
-        filePath = path.join(__dirname, 'views', 'login.html');
+        filePath = path.join(__dirname, 'src/views', 'login.html');
     } else if (pathname === '/home' || pathname === '/index') {
-        filePath = path.join(__dirname, 'views', 'index.html');
+        filePath = path.join(__dirname, 'src/views', 'index.html');
     } else if (pathname === '/favicon.ico') {
         filePath = path.join(__dirname, 'public', 'favicon.ico');
     } else if (pathname.startsWith('/views/')) {
-        filePath = path.join(__dirname, pathname);
+        filePath = path.join(__dirname, 'src', pathname);
     } else if (pathname.startsWith('/css/') || pathname.startsWith('/js/') || pathname.startsWith('/images/')) {
         filePath = path.join(__dirname, 'public', pathname);
     } else {
-        filePath = path.join(__dirname, 'views', pathname + '.html');
+        filePath = path.join(__dirname, 'src/views', pathname + '.html');
     }
 
     serveStaticFile(res, filePath);
@@ -144,4 +144,4 @@ process.on('SIGINT', () => {
         console.log('Server closed');
         process.exit(0);
     });
-}); 
+});

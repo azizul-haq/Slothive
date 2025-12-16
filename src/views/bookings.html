@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings | SlotHive</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/modern-system.css">
+    <style>
+        /* Enhanced Bookings Page with Modern Light Theme */
+        :root {
+            --primary-blue: #3B82F6;
+            --light-blue: #60A5FA;
+            --blue-gradient: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+            --accent-blue: #2563EB;
+            --success-green: #10B981;
+            --warning-orange: #F59E0B;
+            --danger-red: #EF4444;
+            --light-bg: #F8FAFC;
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: var(--white);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--blue-gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--blue-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu-item {
+            text-decoration: none;
+            color: var(--gray-600);
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu-item:hover,
+        .nav-menu-item.active {
+            color: var(--primary-blue);
+        }
+
+        .nav-menu-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--blue-gradient);
+            border-radius: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .student-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--blue-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .student-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: var(--gray-800);
+            font-size: 0.875rem;
+        }
+
+        .student-role {
+            color: var(--gray-600);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .logout-btn {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--gray-200);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Section */
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 0;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+        }
+
+        .main-subtitle {
+            font-size: 1.125rem;
+            color: var(--gray-600);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Bookings Grid */
+        .bookings-section {
+            margin-bottom: 3rem;
+        }
+
+        .bookings-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .bookings-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+        }
+
+        .bookings-description {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .bookings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .booking-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 1px solid var(--gray-200);
+            position: relative;
+        }
+
+        .booking-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .booking-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--blue-gradient);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .booking-info {
+            margin-bottom: 1.5rem;
+        }
+
+        .booking-room {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+        }
+
+        .booking-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .booking-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-600);
+        }
+
+        .booking-detail strong {
+            color: var(--gray-800);
+        }
+
+        .token-code {
+            background: var(--gray-50);
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.875rem;
+            color: var(--gray-800);
+            border: 1px solid var(--gray-200);
+        }
+
+        .booking-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-green);
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-red);
+        }
+
+        .booking-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            justify-content: center;
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .btn-danger {
+            background: var(--danger-red);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #DC2626;
+            transform: translateY(-1px);
+        }
+
+        /* Loading and Empty States */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: var(--gray-600);
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gray-200);
+            border-top: 2px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--gray-600);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem 0;
+            }
+
+            .nav-center {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-left,
+            .nav-right {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .bookings-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .booking-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-section {
+                padding: 2rem 1rem;
+            }
+
+            .main-title {
+                font-size: 1.75rem;
+            }
+
+            .bookings-card {
+                padding: 1.5rem;
+            }
+
+            .booking-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <!-- Left side: Logo + SlotHive branding -->
+            <div class="nav-left">
+                <img src="/images/slothive_logo.png" alt="SlotHive Logo" style="width: 40px; height: 40px; margin-right: 0.5rem;">
+                <div class="brand-name">SlotHive</div>
+            </div>
+
+            <!-- Center: Navigation menu -->
+            <div class="nav-center">
+                <a href="/dashboard_student" class="nav-menu-item">Dashboard</a>
+                <a href="/slots" class="nav-menu-item">Available Slots</a>
+                <a href="/bookings" class="nav-menu-item active">My Bookings</a>
+                <a href="/booking_history" class="nav-menu-item active">History</a>
+                <a href="/token" class="nav-menu-item">Token</a>
+            </div>
+
+            <!-- Right side: Student profile + logout -->
+            <div class="nav-right">
+                <div class="student-profile">
+                    <div class="student-avatar">S</div>
+                    <div class="student-info">
+                        <div class="student-name">Student</div>
+                        <div class="student-role">STUDENT</div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header Section -->
+        <section class="header-section">
+            <h1 class="main-title">My Bookings</h1>
+            <p class="main-subtitle">View and manage your presentation bookings. You can view your tokens or cancel bookings if needed.</p>
+        </section>
+
+        <!-- Bookings Section -->
+        <section class="bookings-section">
+            <div class="bookings-card">
+                <h2 class="bookings-title">Your Presentation Bookings</h2>
+                <p class="bookings-description">
+                    All your current and past booking history is displayed below. You can view your booking tokens or cancel bookings if needed.
+                </p>
+                <div id="bookingsContainer" class="bookings-grid">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        Loading your bookings...
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Check authentication on page load
+        window.addEventListener('load', async function() {
+            try {
+                const response = await fetch('/api/auth/check');
+                if (!response.ok) {
+                    window.location.href = '/login';
+                    return;
+                }
+
+                const result = await response.json();
+                if (result.role !== 'student') {
+                    window.location.href = '/';
+                    return;
+                }
+
+                // Load user bookings
+                loadMyBookings();
+            } catch (error) {
+                window.location.href = '/login';
+            }
+        });
+
+        // Load user's bookings
+        async function loadMyBookings() {
+            try {
+                const response = await fetch('/api/student/bookings');
+                const result = await response.json();
+
+                const container = document.getElementById('bookingsContainer');
+
+                if (result.bookings.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📝</div>
+                            <p>You have no bookings yet. Start by booking your first presentation slot!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const bookingsHTML = result.bookings.map(booking => {
+                    // Format date to DD-MM-YYYY
+                    const dateParts = booking.date.split('-');
+                    const formattedDate = `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0]}`;
+
+                    // Format time to HH-MM AM/PM
+                    const formatTime = (timeStr) => {
+                        const [hours, minutes] = timeStr.split(':');
+                        const hour24 = parseInt(hours);
+                        const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+                        const ampm = hour24 >= 12 ? 'PM' : 'AM';
+                        return `${String(hour12).padStart(2, '0')}-${String(minutes).padStart(2, '0')} ${ampm}`;
+                    };
+
+                    const formattedStartTime = formatTime(booking.time_start);
+                    const formattedEndTime = formatTime(booking.time_end);
+
+                    // Format booking time to DD-MM-YYYY HH-MM AM/PM
+                    const bookingDate = new Date(booking.booking_time);
+                    const bookingDay = String(bookingDate.getDate()).padStart(2, '0');
+                    const bookingMonth = String(bookingDate.getMonth() + 1).padStart(2, '0');
+                    const bookingYear = bookingDate.getFullYear();
+                    const bookingHour24 = bookingDate.getHours();
+                    const bookingHour12 = bookingHour24 === 0 ? 12 : bookingHour24 > 12 ? bookingHour24 - 12 : bookingHour24;
+                    const bookingMinutes = String(bookingDate.getMinutes()).padStart(2, '0');
+                    const bookingAmpm = bookingHour24 >= 12 ? 'PM' : 'AM';
+
+                    const formattedBookingTime = `${bookingDay}-${bookingMonth}-${bookingYear} ${String(bookingHour12).padStart(2, '0')}-${bookingMinutes} ${bookingAmpm}`;
+
+                    const statusClass = booking.status.toLowerCase();
+
+                    return `
+                    <div class="booking-card">
+                        <div class="booking-info">
+                            <div class="booking-room">Room ${booking.room_no}</div>
+                            <div class="booking-details">
+                                <div class="booking-detail">
+                                    <strong>📅 Date:</strong> ${formattedDate}
+                                </div>
+                                <div class="booking-detail">
+                                    <strong>🕐 Time:</strong> ${formattedStartTime} - ${formattedEndTime}
+                                </div>
+                                <div class="booking-detail">
+                                    <strong>🎫 Token:</strong> 
+                                    <span class="token-code">${booking.token_code}</span>
+                                </div>
+                                <div class="booking-detail">
+                                    <strong>📝 Booked on:</strong> ${formattedBookingTime}
+                                </div>
+                                <div class="booking-detail">
+                                    <strong>Status:</strong> 
+                                    <span class="booking-status status-${statusClass}">${booking.status}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="booking-actions">
+                            <button class="btn btn-secondary" onclick="viewToken('${booking.token_code}')">
+                                👁️ View Token
+                            </button>
+                            ${booking.status === 'ACTIVE' ? `
+                                <button class="btn btn-danger" onclick="cancelBooking(${booking.booking_id}, '${booking.room_no}')">
+                                    ❌ Cancel Booking
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+
+                container.innerHTML = bookingsHTML;
+            } catch (error) {
+                document.getElementById('bookingsContainer').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <p>Error loading bookings. Please refresh the page.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // View token
+        function viewToken(tokenCode) {
+            window.location.href = `/token?code=${tokenCode}`;
+        }
+
+        // Cancel booking
+        async function cancelBooking(bookingId, roomNo) {
+            if (!confirm(`Are you sure you want to cancel your booking for Room ${roomNo}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/student/bookings/${bookingId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert(result.message || 'Booking cancelled successfully!');
+                    loadMyBookings(); // Reload the bookings list
+                } else {
+                    const error = await response.json();
+                    alert('Error cancelling booking: ' + (error.error || error.details || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Error cancelling booking. Please try again.');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch('/api/auth/logout', { method: 'POST' })
+                    .then(() => window.location.href = '/')
+                    .catch(() => window.location.href = '/');
+            }
+        }
+    </script>
+</body>
+</html>

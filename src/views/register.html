@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - SlotHive</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/modern-system.css">
+    <style>
+        /* Corporate University System Register Style */
+        :root {
+            --corporate-primary: #2c5282;
+            --corporate-secondary: #4a90e2;
+            --corporate-accent: #63b3ed;
+            --corporate-bg: #f7fafc;
+            --corporate-card-bg: #ffffff;
+            --corporate-text: #2d3748;
+            --corporate-text-light: #718096;
+            --corporate-border: #e2e8f0;
+            --corporate-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --corporate-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden; /* Prevent page scrolling */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%), url('/images/background.svg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+            position: relative;
+        }
+
+        /* Subtle background overlay */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(2px);
+        }
+
+        /* Main container */
+        .register-container {
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Register card */
+        .register-card {
+            background: var(--corporate-card-bg);
+            border-radius: 12px;
+            box-shadow: var(--corporate-shadow-lg);
+            padding: 2.5rem;
+            width: 100%;
+            border: 1px solid var(--corporate-border);
+            animation: slideIn 0.6s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header section */
+        .register-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--corporate-primary), var(--corporate-secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--corporate-primary);
+        }
+
+        .register-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--corporate-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .register-subtitle {
+            font-size: 0.95rem;
+            color: var(--corporate-text-light);
+            line-height: 1.5;
+        }
+
+        /* Form styles */
+        .register-form {
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--corporate-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1.5px solid var(--corporate-border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: white;
+            color: var(--corporate-text);
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--corporate-secondary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #a0aec0;
+        }
+
+        .form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 16px 12px;
+            padding-right: 2.5rem;
+            appearance: none;
+        }
+
+        /* Student fields section */
+        .student-fields {
+            background: #f8fafc;
+            border: 1px solid var(--corporate-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .student-fields.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .student-fields h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--corporate-text);
+            margin-bottom: 1rem;
+            text-align: center;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--corporate-border);
+        }
+
+        /* Password strength indicator */
+        .password-strength {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .strength-weak {
+            color: #e53e3e;
+        }
+
+        .strength-medium {
+            color: #d69e2e;
+        }
+
+        .strength-strong {
+            color: #38a169;
+        }
+
+        /* Button styles */
+        .btn-primary {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: linear-gradient(135deg, var(--corporate-primary), var(--corporate-secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 0.5rem;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(44, 82, 130, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Footer */
+        .register-footer {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--corporate-border);
+        }
+
+        .register-footer p {
+            font-size: 0.9rem;
+            color: var(--corporate-text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .register-footer a {
+            color: var(--corporate-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .register-footer a:hover {
+            color: var(--corporate-primary);
+        }
+
+        /* Messages */
+        .message {
+            margin-top: 1.5rem;
+            padding: 0.875rem 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .message-success {
+            background: #f0fff4;
+            color: #38a169;
+            border: 1px solid #9ae6b4;
+        }
+
+        .message-error {
+            background: #fed7d7;
+            color: #e53e3e;
+            border: 1px solid #feb2b2;
+        }
+
+        /* Loading state */
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid transparent;
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            body {
+                padding: 0.5rem;
+                height: 100vh;
+                overflow: hidden;
+            }
+
+            .register-card {
+                padding: 2rem 1.25rem;
+                margin: 0;
+            }
+
+            .register-title {
+                font-size: 1.5rem;
+            }
+
+            .logo-text {
+                font-size: 1.25rem;
+            }
+
+            .student-fields {
+                padding: 1.25rem;
+            }
+        }
+
+        /* Ensure content fits viewport */
+        @media (max-height: 700px) {
+            .register-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .register-header {
+                margin-bottom: 1.5rem;
+            }
+
+            .student-fields {
+                margin: 1rem 0;
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <div class="logo-section">
+                    <div class="logo-icon">S</div>
+                    <div class="logo-text">SlotHive</div>
+                </div>
+                <h1 class="register-title">Create Account</h1>
+                <p class="register-subtitle">Join SlotHive to start booking presentation rooms</p>
+            </div>
+
+            <form id="registerForm" class="register-form">
+                <div class="form-group">
+                    <label for="role" class="form-label">Register As</label>
+                    <select id="role" name="role" class="form-control form-select" required onchange="toggleFields()">
+                        <option value="">Select Role</option>
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        class="form-control" 
+                        placeholder="Enter your full name"
+                        required 
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-control" 
+                        placeholder="Enter your email"
+                        required 
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-control" 
+                        placeholder="Create a password"
+                        minlength="6"
+                        required 
+                    >
+                    <div class="password-strength" id="passwordStrength"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        name="confirmPassword" 
+                        class="form-control" 
+                        placeholder="Confirm your password"
+                        minlength="6"
+                        required 
+                    >
+                </div>
+
+                <!-- Student-specific fields -->
+                <div id="studentFields" class="student-fields">
+                    <h3>Student Information</h3>
+                    <div class="form-group">
+                        <label for="student_id" class="form-label">Student ID</label>
+                        <input 
+                            type="text" 
+                            id="student_id" 
+                            name="student_id" 
+                            class="form-control" 
+                            placeholder="Enter student ID"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="batch" class="form-label">Batch</label>
+                        <input 
+                            type="text" 
+                            id="batch" 
+                            name="batch" 
+                            class="form-control" 
+                            placeholder="Enter batch year"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dept" class="form-label">Department</label>
+                        <input 
+                            type="text" 
+                            id="dept" 
+                            name="dept" 
+                            class="form-control" 
+                            placeholder="Enter department"
+                        >
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="registerBtn">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="register-footer">
+                <p>Already have an account? <a href="/login">Sign in</a></p>
+            </div>
+
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
+    <script>
+        function toggleFields() {
+            const role = document.getElementById('role').value;
+            const studentFields = document.getElementById('studentFields');
+
+            if (role === 'student') {
+                studentFields.classList.add('show');
+                // Make student fields required
+                document.getElementById('student_id').required = true;
+                document.getElementById('batch').required = true;
+                document.getElementById('dept').required = true;
+            } else {
+                studentFields.classList.remove('show');
+                // Remove required from student fields
+                document.getElementById('student_id').required = false;
+                document.getElementById('batch').required = false;
+                document.getElementById('dept').required = false;
+            }
+        }
+
+        // Password strength checker
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthDiv = document.getElementById('passwordStrength');
+            
+            if (password.length === 0) {
+                strengthDiv.textContent = '';
+                return;
+            }
+            
+            let strength = 0;
+            if (password.length >= 6) strength++;
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            
+            if (strength < 2) {
+                strengthDiv.textContent = 'Password strength: Weak';
+                strengthDiv.className = 'password-strength strength-weak';
+            } else if (strength < 3) {
+                strengthDiv.textContent = 'Password strength: Medium';
+                strengthDiv.className = 'password-strength strength-medium';
+            } else {
+                strengthDiv.textContent = 'Password strength: Strong';
+                strengthDiv.className = 'password-strength strength-strong';
+            }
+        });
+
+        // Real-time password confirmation
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            
+            if (confirmPassword && password !== confirmPassword) {
+                this.style.borderColor = '#e53e3e';
+            } else {
+                this.style.borderColor = 'var(--corporate-border)';
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('registerBtn');
+            
+            // Password confirmation check
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match. Please check and try again.', 'error');
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.classList.add('btn-loading');
+            submitBtn.disabled = true;
+
+            const formData = new FormData(this);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                role: formData.get('role')
+            };
+
+            // Add student-specific fields if registering as student
+            if (data.role === 'student') {
+                data.student_id = formData.get('student_id');
+                data.batch = formData.get('batch');
+                data.dept = formData.get('dept');
+            }
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage('Registration successful! Redirecting to login...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
+                    showMessage(result.error || 'Registration failed. Please try again.', 'error');
+                    resetButton();
+                }
+            } catch (error) {
+                showMessage('Network error. Please check your connection and try again.', 'error');
+                resetButton();
+            }
+        });
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message message-${type}`;
+            messageDiv.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function resetButton() {
+            const submitBtn = document.getElementById('registerBtn');
+            submitBtn.classList.remove('btn-loading');
+            submitBtn.disabled = false;
+        }
+
+        // Form validation feedback
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.hasAttribute('required') && !this.value.trim()) {
+                    this.style.borderColor = '#e53e3e';
+                } else {
+                    this.style.borderColor = 'var(--corporate-border)';
+                }
+            });
+
+            input.addEventListener('input', function() {
+                this.style.borderColor = 'var(--corporate-border)';
+            });
+        });
+    </script>
+</body>
+</html>

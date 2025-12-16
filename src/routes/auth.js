@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 
 // Use real Oracle DB
-const db = require('../db/oracle');
+const db = require('../../config/oracle');
 
 // Generate session ID
 function generateSessionId() {
@@ -29,7 +29,7 @@ async function verifySession(sessionId) {
         const sessionTime = new Date(session.CREATED_AT);
         if (now - sessionTime > 24 * 60 * 60 * 1000) {
             // Clean up expired session
-            await db.execute('DELETE FROM Sessions WHERE session_id = :session_id', [sessionId]);
+            await db.execute('DELETE FROM Sessions WHERE session_id = :1', [sessionId]);
             return null;
         }
 
@@ -62,11 +62,11 @@ module.exports = function(req, res, parsedUrl) {
                 const hashedPassword = hashPassword(password);
                 console.log('LOGIN:', { email, hashedPassword, role });
                 if (role === 'student') {
-                    const rows = await db.execute('SELECT * FROM Students WHERE email = :email AND password = :password', [email, hashedPassword]);
+                    const rows = await db.execute('SELECT * FROM Students WHERE email = :1 AND password = :2', [email, hashedPassword]);
                     console.log('Student login query result:', rows);
                     if (rows.length > 0) user = rows[0];
                 } else if (role === 'teacher') {
-                    const rows = await db.execute('SELECT * FROM Teachers WHERE email = :email AND password = :password', [email, hashedPassword]);
+                    const rows = await db.execute('SELECT * FROM Teachers WHERE email = :1 AND password = :2', [email, hashedPassword]);
                     console.log('Teacher login query result:', rows);
                     if (rows.length > 0) user = rows[0];
                 }
@@ -113,10 +113,10 @@ module.exports = function(req, res, parsedUrl) {
                 // Check if user already exists
                 let exists = false;
                 if (role === 'student') {
-                    const rows = await db.execute('SELECT * FROM Students WHERE email = :email', [email]);
+                    const rows = await db.execute('SELECT * FROM Students WHERE email = :1', [email]);
                     if (rows.length > 0) exists = true;
                 } else if (role === 'teacher') {
-                    const rows = await db.execute('SELECT * FROM Teachers WHERE email = :email', [email]);
+                    const rows = await db.execute('SELECT * FROM Teachers WHERE email = :1', [email]);
                     if (rows.length > 0) exists = true;
                 }
                 if (exists) {
@@ -163,7 +163,7 @@ module.exports = function(req, res, parsedUrl) {
                         ?.split('=')[1];
 
                     if (sessionId) {
-                        await db.execute('DELETE FROM Sessions WHERE session_id = :session_id', [sessionId]);
+                        await db.execute('DELETE FROM Sessions WHERE session_id = :1', [sessionId]);
                     }
                 }
 

@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking History | SlotHive</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/modern-system.css">
+    <style>
+        /* Enhanced Booking History with Modern Light Theme */
+        :root {
+            --primary-blue: #3B82F6;
+            --light-blue: #60A5FA;
+            --blue-gradient: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+            --accent-blue: #2563EB;
+            --success-green: #10B981;
+            --warning-orange: #F59E0B;
+            --danger-red: #EF4444;
+            --light-bg: #F8FAFC;
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: var(--white);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--blue-gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--blue-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu-item {
+            text-decoration: none;
+            color: var(--gray-600);
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu-item:hover,
+        .nav-menu-item.active {
+            color: var(--primary-blue);
+        }
+
+        .nav-menu-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--blue-gradient);
+            border-radius: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .student-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--blue-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .logout-btn {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--gray-200);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Section */
+        .header-section {
+            margin-bottom: 2rem;
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+        }
+
+        .main-subtitle {
+            font-size: 1.125rem;
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+        }
+
+        .filters-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 1.5rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .filter-input,
+        .filter-select {
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: var(--white);
+            color: var(--gray-800);
+            transition: all 0.3s ease;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: var(--blue-gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        /* Results Section */
+        .results-section {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .results-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .results-count {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        /* Bookings Grid */
+        .bookings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .booking-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .booking-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-blue);
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .booking-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-green);
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-red);
+        }
+
+        .status-completed {
+            background: rgba(107, 114, 128, 0.1);
+            color: var(--gray-600);
+        }
+
+        .booking-details {
+            margin-bottom: 1rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .detail-label {
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: var(--gray-800);
+            font-weight: 400;
+        }
+
+        .token-code {
+            background: var(--gray-200);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            border-radius: 6px;
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: var(--gray-600);
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gray-200);
+            border-top: 2px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--gray-600);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem 0;
+            }
+
+            .nav-center {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-left,
+            .nav-right {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .filter-actions {
+                flex-direction: column;
+            }
+
+            .bookings-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .booking-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="brand-logo">S</div>
+                <div class="brand-name">SlotHive</div>
+            </div>
+            <div class="nav-center">
+                <a href="/dashboard_student_enhanced" class="nav-menu-item">Dashboard</a>
+                <a href="/slots" class="nav-menu-item">Available Slots</a>
+                <a href="/bookings" class="nav-menu-item">My Bookings</a>
+                <a href="/booking_history" class="nav-menu-item active">History</a>
+                <a href="/token" class="nav-menu-item active">Token</a>
+            </div>
+            <div class="nav-right">
+                <div class="student-profile">
+                    <div class="student-avatar">S</div>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header Section -->
+        <section class="header-section">
+            <h1 class="main-title">Booking History</h1>
+            <p class="main-subtitle">View and manage your complete booking history with advanced filtering options.</p>
+        </section>
+
+        <!-- Filters Section -->
+        <section class="filters-section">
+            <h2 class="filters-title">Filter Bookings</h2>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Date From</label>
+                    <input type="date" id="dateFrom" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Date To</label>
+                    <input type="date" id="dateTo" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Status</label>
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">All Statuses</option>
+                        <option value="ACTIVE">Active</option>
+                        <option value="CANCELLED">Cancelled</option>
+                        <option value="COMPLETED">Completed</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Room Number</label>
+                    <input type="text" id="roomFilter" class="filter-input" placeholder="Enter room number">
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+                <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section">
+            <div class="results-header">
+                <h2 class="results-title">Your Bookings</h2>
+                <span class="results-count" id="resultsCount">Loading...</span>
+            </div>
+            <div id="bookingsContainer" class="bookings-grid">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    Loading your bookings...
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let allBookings = [];
+        let filteredBookings = [];
+
+        // Initialize page
+        window.addEventListener('load', async function() {
+            await checkAuthentication();
+            await loadAllBookings();
+            setupEventListeners();
+        });
+
+        // Check authentication
+        async function checkAuthentication() {
+            try {
+                const response = await fetch('/api/auth/check');
+                if (!response.ok) {
+                    window.location.href = '/login';
+                    return;
+                }
+                
+                const result = await response.json();
+                if (result.role !== 'student') {
+                    window.location.href = '/';
+                    return;
+                }
+            } catch (error) {
+                window.location.href = '/login';
+            }
+        }
+
+        // Load all bookings
+        async function loadAllBookings() {
+            try {
+                const response = await fetch('/api/student/bookings');
+                if (!response.ok) throw new Error('Failed to load bookings');
+                
+                const data = await response.json();
+                allBookings = data.bookings || [];
+                filteredBookings = [...allBookings];
+                
+                displayBookings();
+                updateResultsCount();
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+                showErrorState();
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Auto-apply filters on input change
+            document.getElementById('dateFrom').addEventListener('change', applyFilters);
+            document.getElementById('dateTo').addEventListener('change', applyFilters);
+            document.getElementById('statusFilter').addEventListener('change', applyFilters);
+            document.getElementById('roomFilter').addEventListener('input', debounce(applyFilters, 500));
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+            const status = document.getElementById('statusFilter').value;
+            const roomFilter = document.getElementById('roomFilter').value.toLowerCase();
+
+            filteredBookings = allBookings.filter(booking => {
+                // Date range filter
+                if (dateFrom && booking.date < dateFrom) return false;
+                if (dateTo && booking.date > dateTo) return false;
+                
+                // Status filter
+                if (status && booking.status !== status) return false;
+                
+                // Room filter
+                if (roomFilter && !booking.room_no.toLowerCase().includes(roomFilter)) return false;
+                
+                return true;
+            });
+
+            displayBookings();
+            updateResultsCount();
+        }
+
+        // Clear filters
+        function clearFilters() {
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('roomFilter').value = '';
+            
+            filteredBookings = [...allBookings];
+            displayBookings();
+            updateResultsCount();
+        }
+
+        // Display bookings
+        function displayBookings() {
+            const container = document.getElementById('bookingsContainer');
+            
+            if (filteredBookings.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <p>No bookings found matching your criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const bookingsHTML = filteredBookings.map(booking => {
+                const formattedDate = formatDate(booking.date);
+                const formattedTime = formatTimeRange(booking.time_start, booking.time_end);
+                const formattedBookingTime = formatDateTime(booking.booking_time);
+
+                return `
+                    <div class="booking-card">
+                        <div class="booking-header">
+                            <div class="booking-title">Room ${booking.room_no}</div>
+                            <span class="status-badge status-${booking.status.toLowerCase()}">${booking.status}</span>
+                        </div>
+                        <div class="booking-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Date:</span>
+                                <span class="detail-value">${formattedDate}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Time:</span>
+                                <span class="detail-value">${formattedTime}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Token:</span>
+                                <span class="detail-value"><code class="token-code">${booking.token_code}</code></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Booked on:</span>
+                                <span class="detail-value">${formattedBookingTime}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Views:</span>
+                                <span class="detail-value">${booking.view_count || 0}</span>
+                            </div>
+                        </div>
+                        <div class="booking-actions">
+                            <button class="btn btn-primary btn-small" onclick="viewToken('${booking.token_code}')">
+                                View Token
+                            </button>
+                            ${booking.status === 'ACTIVE' ? `
+                                <button class="btn btn-secondary btn-small" onclick="cancelBooking(${booking.booking_id}, '${booking.room_no}')">
+                                    Cancel
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = bookingsHTML;
+        }
+
+        // Update results count
+        function updateResultsCount() {
+            const count = filteredBookings.length;
+            const total = allBookings.length;
+            document.getElementById('resultsCount').textContent = 
+                `${count} of ${total} bookings`;
+        }
+
+        // Show error state
+        function showErrorState() {
+            const container = document.getElementById('bookingsContainer');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">⚠️</div>
+                    <p>Failed to load booking history. Please try refreshing the page.</p>
+                </div>
+            `;
+        }
+
+        // Format date
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        // Format time range
+        function formatTimeRange(startTime, endTime) {
+            const formatTime = (timeStr) => {
+                const [hours, minutes] = timeStr.split(':');
+                const hour24 = parseInt(hours);
+                const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+                const ampm = hour24 >= 12 ? 'PM' : 'AM';
+                return `${String(hour12).padStart(2, '0')}:${minutes} ${ampm}`;
+            };
+
+            return `${formatTime(startTime)} - ${formatTime(endTime)}`;
+        }
+
+        // Format datetime
+        function formatDateTime(dateTimeStr) {
+            const date = new Date(dateTimeStr);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // View token
+        function viewToken(tokenCode) {
+            window.location.href = `/token?code=${tokenCode}`;
+        }
+
+        // Cancel booking
+        async function cancelBooking(bookingId, roomNo) {
+            if (!confirm(`Are you sure you want to cancel your booking for Room ${roomNo}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/student/bookings/${bookingId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('Booking cancelled successfully!');
+                    await loadAllBookings(); // Reload all bookings
+                } else {
+                    const error = await response.json();
+                    alert('Error cancelling booking: ' + error.error);
+                }
+            } catch (error) {
+                alert('Error cancelling booking. Please try again.');
+            }
+        }
+
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch('/api/auth/logout', { method: 'POST' })
+                    .then(() => window.location.href = '/')
+                    .catch(() => window.location.href = '/');
+            }
+        }
+    </script>
+</body>
+</html>
