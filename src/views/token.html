@@ -593,6 +593,37 @@
                 </div>
 
                 <div class="token-details">
+                    <!-- Course Information Card -->
+                    <div class="course-info-card" style="background: var(--gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--gray-200); margin-bottom: 1rem;">
+                        <div class="course-info-header">
+                            <h4 style="color: var(--primary-blue); margin-bottom: 0.5rem;">Course Information</h4>
+                        </div>
+                        <div class="course-info-body">
+                            <div class="course-info-detail">
+                                <strong>📘 Course Name:</strong>
+                                <span id="courseName">Loading...</span>
+                            </div>
+                            <div class="course-info-detail">
+                                <strong>Code:</strong>
+                                <span id="courseCode" style="background: var(--gray-200); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Teacher Information -->
+                    <div class="teacher-info-card" style="background: var(--gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--gray-200); margin-bottom: 1rem;">
+                        <div class="teacher-info-header">
+                            <h4 style="color: var(--primary-blue); margin-bottom: 0.5rem;">Teacher Information</h4>
+                        </div>
+                        <div class="teacher-info-body">
+                            <div class="teacher-info-detail">
+                                <strong>👨‍🏫 Teacher:</strong>
+                                <span id="teacherName">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Token Details -->
                     <div class="token-row">
                         <span class="label">Token Code:</span>
                         <span class="value" id="tokenCode">Loading...</span>
@@ -721,6 +752,11 @@
                 document.getElementById('bookingDate').textContent = formattedDate;
                 document.getElementById('bookingTime').textContent = `${formattedStartTime} - ${formattedEndTime}`;
                 document.getElementById('createdTime').textContent = formattedBookingTime;
+
+                // Populate course and teacher information
+                document.getElementById('courseName').textContent = booking.course_name || 'N/A';
+                document.getElementById('courseCode').textContent = booking.course_code || 'N/A';
+                document.getElementById('teacherName').textContent = booking.teacher_name || 'N/A';
 
                 // Track token view after displaying details
                 await trackTokenView(tokenCode);

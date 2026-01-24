@@ -475,7 +475,7 @@
                 <a href="/dashboard_student" class="nav-menu-item">Dashboard</a>
                 <a href="/slots" class="nav-menu-item">Available Slots</a>
                 <a href="/bookings" class="nav-menu-item active">My Bookings</a>
-                <a href="/booking_history" class="nav-menu-item active">History</a>
+                <a href="/booking_history" class="nav-menu-item">History</a>
                 <a href="/token" class="nav-menu-item">Token</a>
             </div>
 
@@ -602,14 +602,20 @@
                                     <strong>🕐 Time:</strong> ${formattedStartTime} - ${formattedEndTime}
                                 </div>
                                 <div class="booking-detail">
-                                    <strong>🎫 Token:</strong> 
+                                    <strong>👨‍🏫 Teacher:</strong> ${booking.teacher_name || 'N/A'}
+                                </div>
+                                <div class="booking-detail">
+                                    <strong>📘 Course:</strong> ${booking.course_name || 'N/A'}
+                                </div>
+                                <div class="booking-detail">
+                                    <strong>🎫 Token:</strong>
                                     <span class="token-code">${booking.token_code}</span>
                                 </div>
                                 <div class="booking-detail">
                                     <strong>📝 Booked on:</strong> ${formattedBookingTime}
                                 </div>
                                 <div class="booking-detail">
-                                    <strong>Status:</strong> 
+                                    <strong>Status:</strong>
                                     <span class="booking-status status-${statusClass}">${booking.status}</span>
                                 </div>
                             </div>

@@ -1,6 +1,12 @@
 -- SlotHive Database Schema Updates
 -- This script adds missing columns and tables for enhanced functionality
 
+-- Add course_code and teacher_name columns to existing Rooms table
+ALTER TABLE Rooms ADD (
+    course_code VARCHAR2(50),
+    teacher_name VARCHAR2(100)
+);
+
 -- Add view_count column to existing Bookings table
 ALTER TABLE Bookings ADD (
     view_count NUMBER DEFAULT 0,

@@ -92,7 +92,9 @@ CREATE TABLE Rooms (
     room_no VARCHAR2(10) NOT NULL,
     date_available DATE NOT NULL,
     time_from TIMESTAMP NOT NULL,
-    time_to TIMESTAMP NOT NULL
+    time_to TIMESTAMP NOT NULL,
+    course_code VARCHAR2(50),
+    teacher_name VARCHAR2(100)
 );
 
 -- SLOTS (30-minute slots, Oracle 11g compatible)

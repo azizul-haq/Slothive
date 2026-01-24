@@ -80,7 +80,7 @@ module.exports = function(req, res, parsedUrl) {
             try {
                 // Get available slots with room information
                 const slots = await db.execute(`
-                    SELECT s.slot_id, s.slot_start, s.slot_end, r.room_no
+                    SELECT s.slot_id, s.slot_start, s.slot_end, r.room_no, r.teacher_name, r.course_code
                     FROM Slots s
                     JOIN Rooms r ON s.room_id = r.room_id
                     WHERE s.is_booked = 'N'
@@ -125,7 +125,9 @@ module.exports = function(req, res, parsedUrl) {
                         room_no: slot.ROOM_NO,
                         date: date,
                         time_start: time_start,
-                        time_end: time_end
+                        time_end: time_end,
+                        teacher_name: slot.TEACHER_NAME || 'N/A',
+                        course_name: slot.COURSE_CODE || 'N/A'
                     };
                 });
 
@@ -253,14 +255,14 @@ module.exports = function(req, res, parsedUrl) {
                 );
 
                 const bookings = await db.execute(`
-                    SELECT b.BOOKING_ID, b.TOKEN_CODE, b.BOOKING_TIME,
-                           r.ROOM_NO, s.SLOT_START, s.SLOT_END
-                    FROM BOOKINGS b
-                    JOIN SLOTS s ON b.SLOT_ID = s.SLOT_ID
-                    JOIN ROOMS r ON s.ROOM_ID = r.ROOM_ID
-                    WHERE b.STUDENT_ID = :1
-                    ORDER BY b.BOOKING_TIME DESC
-                `, [user.user_id]);
+                   SELECT b.BOOKING_ID, b.TOKEN_CODE, b.BOOKING_TIME,
+                          r.ROOM_NO, s.SLOT_START, s.SLOT_END, r.COURSE_CODE, r.TEACHER_NAME
+                   FROM BOOKINGS b
+                   JOIN SLOTS s ON b.SLOT_ID = s.SLOT_ID
+                   JOIN ROOMS r ON s.ROOM_ID = r.ROOM_ID
+                   WHERE b.STUDENT_ID = :1
+                   ORDER BY b.BOOKING_TIME DESC
+               `, [user.user_id]);
 
 
 
@@ -307,6 +309,9 @@ module.exports = function(req, res, parsedUrl) {
                         time_end: time_end,
                         token_code: booking.TOKEN_CODE,
                         booking_time: booking.BOOKING_TIME,
+                        course_name: booking.COURSE_CODE || 'N/A',
+                        course_code: booking.COURSE_CODE || 'N/A',
+                        teacher_name: booking.TEACHER_NAME || 'N/A',
                         view_count: 0,
                         status: 'ACTIVE'
                     };

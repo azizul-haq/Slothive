@@ -422,7 +422,7 @@
             <div class="nav-center">
                 <a href="/dashboard_student" class="nav-menu-item">Dashboard</a>
                 <a href="/slots" class="nav-menu-item active">Available Slots</a>
-                <a href="/bookings" class="nav-menu-item active">My Bookings</a>
+                <a href="/bookings" class="nav-menu-item">My Bookings</a>
                 <a href="/booking_history" class="nav-menu-item">Bookings History</a>
                 <a href="/token" class="nav-menu-item">Token</a>
             </div>
@@ -534,6 +534,12 @@
                                 </div>
                                 <div class="slot-detail">
                                     <strong>🕐 Time:</strong> ${formattedStartTime} - ${formattedEndTime}
+                                </div>
+                                <div class="slot-detail">
+                                    <strong>👨‍🏫 Teacher:</strong> ${slot.teacher_name || 'N/A'}
+                                </div>
+                                <div class="slot-detail">
+                                    <strong>📘 Course:</strong> ${slot.course_name || 'N/A'}
                                 </div>
                             </div>
                         </div>

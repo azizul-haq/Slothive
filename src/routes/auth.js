@@ -62,11 +62,11 @@ module.exports = function(req, res, parsedUrl) {
                 const hashedPassword = hashPassword(password);
                 console.log('LOGIN:', { email, hashedPassword, role });
                 if (role === 'student') {
-                    const rows = await db.execute('SELECT * FROM Students WHERE email = :1 AND password = :2', [email, hashedPassword]);
+                    const rows = await db.execute('SELECT * FROM Students WHERE email = :email AND password = :password', { email, password: hashedPassword });
                     console.log('Student login query result:', rows);
                     if (rows.length > 0) user = rows[0];
                 } else if (role === 'teacher') {
-                    const rows = await db.execute('SELECT * FROM Teachers WHERE email = :1 AND password = :2', [email, hashedPassword]);
+                    const rows = await db.execute('SELECT * FROM Teachers WHERE email = :email AND password = :password', { email, password: hashedPassword });
                     console.log('Teacher login query result:', rows);
                     if (rows.length > 0) user = rows[0];
                 }
@@ -203,11 +203,26 @@ module.exports = function(req, res, parsedUrl) {
                     return;
                 }
 
+                // Get user name based on role
+                let userName = null;
+                if (session.role === 'teacher') {
+                    const teacher = await db.execute('SELECT name FROM Teachers WHERE teacher_id = :1', [session.user_id]);
+                    if (teacher.length > 0) {
+                        userName = teacher[0].NAME;
+                    }
+                } else if (session.role === 'student') {
+                    const student = await db.execute('SELECT name FROM Students WHERE student_id = :1', [session.user_id]);
+                    if (student.length > 0) {
+                        userName = student[0].NAME;
+                    }
+                }
+
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({
                     success: true,
                     user_id: session.user_id,
-                    role: session.role
+                    role: session.role,
+                    name: userName
                 }));
             } catch (err) {
                 res.writeHead(500, { 'Content-Type': 'application/json' });

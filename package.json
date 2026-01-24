@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "dotenv": "^17.2.3",
+    "node-fetch": "^3.3.2",
     "oracledb": "^6.9.0"
   },
   "keywords": [
